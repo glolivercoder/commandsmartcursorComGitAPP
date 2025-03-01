@@ -22,10 +22,8 @@ class GitCredentials extends Table {
   TextColumn get apiUrl => text().nullable()();
 }
 
-class GitUserSettings extends Table {
+class GitHubAccounts extends Table {
   TextColumn get username => text()();
-  TextColumn get clientId => text()();
-  TextColumn get clientSecret => text()();
   TextColumn get token => text()();
   TextColumn get createdAt => text()();
 
@@ -35,24 +33,23 @@ class GitUserSettings extends Table {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    // Usar a pasta projetosalvos na raiz do projeto
     final dbFolder = Directory('projetosalvos');
     if (!dbFolder.existsSync()) {
       dbFolder.createSync();
     }
     
     final file = File(p.join(dbFolder.path, 'command_smart.db'));
-    print('Database path: ${file.path}'); // Debug print
+    print('Database path: ${file.path}');
     return NativeDatabase.createInBackground(file);
   });
 }
 
-@DriftDatabase(tables: [SavedDirectories, GitCredentials, GitUserSettings])
+@DriftDatabase(tables: [SavedDirectories, GitCredentials, GitHubAccounts])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -61,31 +58,12 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        if (from < 2) {
-          await m.createTable(gitUserSettings);
+        if (from < 4) {
+          await m.createTable(gitHubAccounts);
+          await m.deleteTable('git_user_settings');
         }
       },
     );
-  }
-
-  // Git User Settings methods
-  Future<List<Map<String, dynamic>>> getGitUserSettings() async {
-    final results = await select(gitUserSettings).get();
-    return results.map((row) => {
-      'username': row.username,
-      'clientId': row.clientId,
-      'clientSecret': row.clientSecret,
-      'token': row.token,
-      'createdAt': row.createdAt,
-    }).toList();
-  }
-
-  Future<void> addGitUserSetting(GitUserSettingsCompanion entry) async {
-    await into(gitUserSettings).insert(entry);
-  }
-
-  Future<void> removeGitUserSetting(String username) async {
-    await (delete(gitUserSettings)..where((tbl) => tbl.username.equals(username))).go();
   }
 
   // Saved Directories methods
@@ -126,13 +104,22 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteGitCredential(int id) =>
       (delete(gitCredentials)..where((t) => t.id.equals(id))).go();
 
+  // GitHub Accounts methods
+  Future<List<GitHubAccount>> getAllGitHubAccounts() =>
+      select(gitHubAccounts).get();
+
+  Future<void> addGitHubAccount(GitHubAccountsCompanion entry) =>
+      into(gitHubAccounts).insert(entry);
+
+  Future<int> deleteGitHubAccount(String username) =>
+      (delete(gitHubAccounts)..where((t) => t.username.equals(username))).go();
+
   // Backup method
   Future<void> _backupDatabase() async {
     try {
       final mainDbFolder = Directory('projetosalvos');
       final backupDir = Directory('projetosalvosBKP');
       
-      // Garantir que ambas as pastas existam
       if (!mainDbFolder.existsSync()) {
         mainDbFolder.createSync();
       }
@@ -140,7 +127,6 @@ class AppDatabase extends _$AppDatabase {
         backupDir.createSync();
       }
 
-      // Copiar todos os arquivos da pasta principal para o backup
       final mainFiles = mainDbFolder.listSync();
       for (var entity in mainFiles) {
         if (entity is File) {

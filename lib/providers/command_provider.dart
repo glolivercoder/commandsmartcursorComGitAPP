@@ -9,6 +9,38 @@ import 'directory_provider.dart';
 class CommandProvider with ChangeNotifier {
   Map<String, List<Map<String, dynamic>>> commands = {
     'Projetos Salvos': [],
+    'Git Setup': [
+      {
+        'name': 'Configurar Usuário',
+        'command': 'git config --global user.name',
+        'description': 'Define o nome do usuário Git',
+        'interactive': 'true'
+      },
+      {
+        'name': 'Configurar Email',
+        'command': 'git config --global user.email',
+        'description': 'Define o email do usuário Git',
+        'interactive': 'true'
+      },
+      {
+        'name': 'Configurar Token',
+        'command': 'git config --global github.token',
+        'description': 'Define o token de acesso do GitHub',
+        'interactive': 'true'
+      },
+      {
+        'name': 'Listar Configurações',
+        'command': 'git config --list',
+        'description': 'Mostra todas as configurações Git',
+        'interactive': 'false'
+      },
+      {
+        'name': 'Adicionar Conta GitHub',
+        'command': 'start "" "http://github.com/settings/tokens"',
+        'description': 'Abre a página de tokens do GitHub',
+        'interactive': 'false'
+      }
+    ],
     'Git Init Commands': [
       {
         'name': 'Init Repository',

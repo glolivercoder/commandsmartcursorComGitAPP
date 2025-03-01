@@ -29,7 +29,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-*.g.dart
+
+# Incluir arquivos gerados do drift
+!*.g.dart
+!lib/database/database.g.dart
 
 # Windows specific
 *.exe
@@ -42,12 +45,14 @@ migrate_working_dir/
 *.msi
 
 # Project specific
-/projetosalvos/
-/projetosalvosBKP/
 /installer_output/
 /windows/flutter/ephemeral/
 .vs/
 /temp_command.bat
+
+# Incluir diretórios de dados
+!/projetosalvos/
+!/projetosalvosBKP/
 
 # Large files and directories
 *.7z
@@ -59,16 +64,14 @@ migrate_working_dir/
 *.war
 *.ear
 *.sar
-*.class
 
-# Database files
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
+# Incluir banco de dados
+!*.db
+!*.db-journal
+!*.sqlite
+!*.sqlite3
 
 # Logs and backups
-*.log
 *.bak
 *.tmp
 *.temp

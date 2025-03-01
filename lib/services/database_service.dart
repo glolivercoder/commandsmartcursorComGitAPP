@@ -26,25 +26,28 @@ class DatabaseService {
     return _database!;
   }
 
-  // Git User Settings methods
-  Future<List<Map<String, dynamic>>> getGitUserSettings() async {
-    return await database.getGitUserSettings();
+  // GitHub Account methods
+  static Future<List<Map<String, dynamic>>> getGitHubAccounts() async {
+    final accounts = await database.getAllGitHubAccounts();
+    return accounts.map((account) => {
+      'username': account.username,
+      'token': account.token,
+      'createdAt': account.createdAt,
+    }).toList();
   }
 
-  Future<void> addGitUserSettings(Map<String, dynamic> settings) async {
-    await database.addGitUserSetting(
-      GitUserSettingsCompanion.insert(
-        username: settings['username'] as String,
-        clientId: settings['clientId'] as String,
-        clientSecret: settings['clientSecret'] as String,
-        token: settings['token'] as String,
-        createdAt: settings['createdAt'] as String,
+  static Future<void> addGitHubAccount(String username, String token) async {
+    await database.addGitHubAccount(
+      GitHubAccountsCompanion.insert(
+        username: username,
+        token: token,
+        createdAt: DateTime.now().toIso8601String(),
       ),
     );
   }
 
-  Future<void> removeGitUserSettings(String username) async {
-    await database.removeGitUserSetting(username);
+  static Future<void> deleteGitHubAccount(String username) async {
+    await database.deleteGitHubAccount(username);
   }
 
   // Existing methods

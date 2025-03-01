@@ -61,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           children: [
-            // Removido _buildTitleBar(context),
             const DirectoryBar(),
             const Expanded(
               child: CommandCategories(),

@@ -3,12 +3,13 @@ import 'package:window_manager/window_manager.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'screens/home_screen.dart';
+import 'screens/add_github_account.dart';
 import 'providers/directory_provider.dart';
 import 'providers/command_provider.dart';
 import 'providers/git_credentials_provider.dart';
-import 'widgets/draggable_window.dart'; // Adicionada importação do DraggableWindow
+import 'providers/github_account_provider.dart';
+import 'widgets/draggable_window.dart';
 import 'services/database_service.dart';
-// Removida importação não utilizada do theme/app_theme.dart
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DirectoryProvider()),
         ChangeNotifierProvider(create: (_) => CommandProvider()),
         ChangeNotifierProvider(create: (_) => GitCredentialsProvider()),
+        ChangeNotifierProvider(create: (_) => GitHubAccountProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -111,6 +113,9 @@ class MyApp extends StatelessWidget {
             ),
           ],
         ),
+        routes: {
+          '/add-github-account': (context) => AddGitHubAccountScreen(),
+        },
       ),
     );
   }
