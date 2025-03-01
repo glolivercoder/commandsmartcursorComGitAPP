@@ -1,0 +1,74 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+*.g.dart
+
+# Windows specific
+*.exe
+*.dll
+*.pdb
+*.zip
+*.msix
+*.msixbundle
+*.appx
+*.msi
+
+# Project specific
+/projetosalvos/
+/projetosalvosBKP/
+/installer_output/
+/windows/flutter/ephemeral/
+.vs/
+/temp_command.bat
+
+# Large files and directories
+*.7z
+*.rar
+*.tar
+*.gz
+*.iso
+*.jar
+*.war
+*.ear
+*.sar
+*.class
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Logs and backups
+*.log
+*.bak
+*.tmp
+*.temp
