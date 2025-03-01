@@ -5,17 +5,18 @@ class DatabaseService {
   static AppDatabase? _database;
   static bool _initialized = false;
 
-  static Future<void> initialize() async {
-    if (_initialized) return;
-    
-    try {
-      _database = AppDatabase();
-      _initialized = true;
-      print('Database initialized successfully!');
-    } catch (e) {
-      print('Error initializing database: $e');
-      rethrow;
+  static Future<DatabaseService> initialize() async {
+    if (!_initialized) {
+      try {
+        _database = AppDatabase();
+        _initialized = true;
+        print('Database initialized successfully!');
+      } catch (e) {
+        print('Error initializing database: $e');
+        rethrow;
+      }
     }
+    return DatabaseService();
   }
 
   static AppDatabase get database {
@@ -25,6 +26,28 @@ class DatabaseService {
     return _database!;
   }
 
+  // Git User Settings methods
+  Future<List<Map<String, dynamic>>> getGitUserSettings() async {
+    return await database.getGitUserSettings();
+  }
+
+  Future<void> addGitUserSettings(Map<String, dynamic> settings) async {
+    await database.addGitUserSetting(
+      GitUserSettingsCompanion.insert(
+        username: settings['username'] as String,
+        clientId: settings['clientId'] as String,
+        clientSecret: settings['clientSecret'] as String,
+        token: settings['token'] as String,
+        createdAt: settings['createdAt'] as String,
+      ),
+    );
+  }
+
+  Future<void> removeGitUserSettings(String username) async {
+    await database.removeGitUserSetting(username);
+  }
+
+  // Existing methods
   static Future<List<SavedDirectory>> getSavedDirectories() async {
     return await database.getAllSavedDirectories();
   }
